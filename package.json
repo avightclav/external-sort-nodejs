@@ -1,7 +1,7 @@
 {
   "name": "external-sort",
   "version": "1.0.0",
-  "description": "Package that helps sorting big files using fixing amount of RAM",
+  "description": "NodeJS CLI for file external sorting",
   "main": "cli.js",
   "type": "module",
   "scripts": {
