@@ -10,12 +10,6 @@ This is a NodeJS CLI for file external sorting.
 npm install
 ```
 
-## Building
-
-```
-npm run build
-```
-
 ## Running
 
 ```
