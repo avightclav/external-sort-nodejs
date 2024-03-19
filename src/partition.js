@@ -6,7 +6,7 @@ async function writeToPath(chunk, path, _callback, destroyCallback) {
     chunkWrapper.push(chunk, 'utf8');
     chunkWrapper.push(null);
     const writeStream = createWriteStream(path)
-    chunkWrapper.pipe(writeStream)
+    return chunkWrapper.pipe(writeStream)
         .on('finish', () => {
         })
         .on('error', (err) => {
@@ -22,6 +22,7 @@ export class PartitionWritable extends Writable {
         this.chunksWritten = 0;
         this.workingDir = options.workingDir;
         this.files = [];
+        this.writes = [];
     }
 
     _write(chunk, encoding, callback) {
@@ -41,5 +42,11 @@ export class PartitionWritable extends Writable {
             writeToPath(chunk, path, callback, this.destroy);
         }
         callback(null);
+    }
+
+    _destroy(err, callback) {
+        Promise.allSettled(this.writes).then(() => {
+            callback(err);
+        });
     }
 }

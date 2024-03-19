@@ -9,7 +9,7 @@ function sortedIndex(array, value, compareFn) {
 
     while (low < high) {
         var mid = (low + high) >>> 1;
-        if (compareFn(array[mid][0], value)) low = mid + 1;
+        if (compareFn(array[mid][0], value) == -1) low = mid + 1;
         else high = mid;
     }
     return low;
@@ -69,7 +69,7 @@ export class MergingReadable extends Readable {
         if (this.sortedPeek.length == 0) {
             this.push(null);
         } else {
-            const [firstElement, readable] = this.sortedPeek.pop();
+            const [firstElement, readable] = this.sortedPeek.shift();
             readSingleChunk(readable).then((nextFromFirstReadable) => {
                 if (nextFromFirstReadable != null) {
                     const index = sortedIndex(this.sortedPeek, nextFromFirstReadable, this.compareFn);
@@ -80,11 +80,12 @@ export class MergingReadable extends Readable {
         }
     }
 
-    _destroy(err) {
+    _destroy(err, callback) {
         if (err) {
             for (const readable of this.readables) {
                 readable.destroy();
             }
         }
+        callback();
     }
 } 

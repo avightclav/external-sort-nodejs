@@ -32,4 +32,11 @@ export class BufferingTransform extends Transform {
 
         cb();
     }
+
+    _flush(callback) {
+        const fullBuffer = this.pending;
+        this.pending = [];
+        this.push(fullBuffer);
+        callback();
+    }
 }
